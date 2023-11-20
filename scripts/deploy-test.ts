@@ -4,13 +4,18 @@ import { config as dotConfig } from "dotenv";
 dotConfig();
 
 async function main() {
-  const router = "0x636f6407B90661b73b1C0F7e24F4C79f624d0738";
-  const feeWallet = process.env.FEE_WALLET;
-  const grok = await ethers.deployContract("GROK", [router, feeWallet]);
+  const [owner, otherAccount] = await ethers.getSigners();
+  const router = "0xDE2Db97D54a3c3B008a097B2260633E6cA7DB1AF";
+  const feeWallets = [
+    otherAccount.address,
+    otherAccount.address,
+    otherAccount.address,
+  ];
+  const token = await ethers.deployContract("TOKEN", [router, feeWallets]);
 
-  await grok.waitForDeployment();
+  await token.waitForDeployment();
 
-  console.log(`GROK deployed to ${grok.target}`);
+  console.log(`TOKEN deployed to ${token.target}`);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
